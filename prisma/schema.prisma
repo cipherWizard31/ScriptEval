@@ -1,0 +1,17 @@
+datasource db {
+  provider = "sqlite"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+model Script {
+  id             String   @id @default(uuid()) // This is our UUID
+  originalName   String   // e.g., "Hamlet_Draft_v2.pdf"
+  internalPath   String   // The path to the file in /script-vault
+  authorName     String   // The playwright
+  title          String   // The play title
+  uploadedAt     DateTime @default(now())
+}
