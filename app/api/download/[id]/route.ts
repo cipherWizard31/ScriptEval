@@ -1,6 +1,6 @@
 // src/app/api/download/[id]/route.ts
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@/lib/db';
 import fs from 'node:fs';
 import path from 'path';
 
