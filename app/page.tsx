@@ -12,13 +12,19 @@ export default function LandingPage() {
         {/* Evaluator Card */}
         <Link href="/evaluator/dashboard" className="group p-8 border-2 border-slate-100 rounded-2xl hover:border-amber-200 hover:bg-amber-50/30 transition-all">
           <h2 className="text-xl font-bold text-slate-800 mb-2 group-hover:text-amber-700">Evaluator Portal</h2>
-          <p className="text-sm text-slate-500">Access the vault, read submissions, and submit reviews.</p>
+          <p className="text-sm text-slate-500">See assigned scripts and evaluate based on instructions.</p>
         </Link>
 
         {/* Admin Card */}
         <Link href="/admin/upload" className="group p-8 border-2 border-slate-100 rounded-2xl hover:border-blue-200 hover:bg-blue-50/30 transition-all">
           <h2 className="text-xl font-bold text-slate-800 mb-2 group-hover:text-blue-700">Administration</h2>
-          <p className="text-sm text-slate-500">Upload new scripts and manage the system database.</p>
+          <p className="text-sm text-slate-500">Manages the script database and the assigns scripts to the evaluators</p>
+        </Link>
+
+        {/* Scripter Card */}
+        <Link href="/scripter/upload" className="group p-8 border-2 border-slate-100 rounded-2xl hover:border-green-200 hover:bg-green-50/30 transition-all">
+          <h2 className="text-xl font-bold text-slate-800 mb-2 group-hover:text-green-700">Scripter</h2>
+          <p className="text-sm text-slate-500">Register new scripts to the system for evaluation.</p>
         </Link>
       </div>
     </main>
