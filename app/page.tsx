@@ -11,7 +11,7 @@ export default function LandingPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl">
         {/* Public Forms Card */}
         <Link
-          href="/scripter/upload"
+          href="/forms/upload"
           className="group p-8 border-2 border-slate-100 rounded-2xl hover:border-green-200 hover:bg-green-50/30 transition-all"
         >
           <h2 className="text-xl font-bold text-slate-800 mb-2 group-hover:text-green-700">
@@ -38,7 +38,7 @@ export default function LandingPage() {
 
         {/* Theater Class(Admin) Card */}
         <Link
-          href="/admin/upload"
+          href="/admin/dashboard"
           className="group p-8 border-2 border-slate-100 rounded-2xl hover:border-blue-200 hover:bg-blue-50/30 transition-all"
         >
           <h2 className="text-xl font-bold text-slate-800 mb-2 group-hover:text-blue-700">
