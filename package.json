@@ -9,6 +9,9 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@embedpdf/plugin-interaction-manager": "^2.10.1",
+    "@embedpdf/plugin-redaction": "^2.10.1",
+    "@embedpdf/plugin-selection": "^2.10.1",
     "better-sqlite3": "^12.8.0",
     "lucide-react": "^1.7.0",
     "next": "16.1.7",
