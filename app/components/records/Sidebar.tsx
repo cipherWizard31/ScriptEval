@@ -1,5 +1,5 @@
+import { ClipboardClock } from 'lucide-react'
 import Link from 'next/link'
-import React from 'react'
 
 const RecordsDashboardSidebar = () => {
   return (
@@ -9,7 +9,7 @@ const RecordsDashboardSidebar = () => {
           <Link href={'/'} className="text-base font-semibold text-gray-900 tracking-tight">
             ScriptEval
           </Link>
-          <Link href={"#"} className="ml-2 text-xs text-gray-400 font-normal">
+          <Link href={"/records/dashboard"} className="ml-2 text-xs text-gray-400 font-normal">
             Records Office
           </Link>
         </div>
@@ -18,40 +18,10 @@ const RecordsDashboardSidebar = () => {
             href="/records/dashboard"
             className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-gray-900 bg-gray-100"
           >
-            <svg
-              className="w-4 h-4 text-gray-500"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3 7h18M3 12h18M3 17h18"
-              />
-            </svg>
-            Vault — Pending
+            <ClipboardClock />
+            Pending Scripts
           </a>
-          <a
-            href="/theater/dashboard"
-            className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors"
-          >
-            <svg
-              className="w-4 h-4 text-gray-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M9 12h6m-3-3v6m9-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-              />
-            </svg>
-            Theater Class
-          </a>
+         
         </nav>
       </aside>
     </div>
