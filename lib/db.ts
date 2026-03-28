@@ -1,3 +1,4 @@
+// lib/db.ts
 import Database from 'better-sqlite3';
 
 const db = new Database('script-eval.db');
@@ -8,10 +9,8 @@ db.exec(`
     title TEXT,
     authorName TEXT,
     contactInfo TEXT,
-    originalName TEXT,
-    internalPath TEXT,
-    status TEXT DEFAULT 'PENDING_RECORDS', -- The missing column
-    assignedTo TEXT,
+    filePath TEXT,        -- Ensure this matches your query name
+    status TEXT DEFAULT 'PENDING_RECORDS',
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
   )
 `);

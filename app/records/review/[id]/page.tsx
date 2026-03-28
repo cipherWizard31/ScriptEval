@@ -1,20 +1,22 @@
-// app/records/review/[id]/page.tsx
 import db from "@/lib/db";
 import { notFound } from "next/navigation";
 import RedactionViewer from "./RedactionViewer";
 
 interface Props {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default async function ReviewPage({ params }: Props) {
+  // Next.js 15 Fix: Await the params
+  const { id } = await params;
+
   const script = db
     .prepare(
       `SELECT id, title, authorName, contactInfo, filePath
        FROM scripts
        WHERE id = ? AND status = 'PENDING_RECORDS'`
     )
-    .get(params.id) as {
+    .get(id) as {
       id: number;
       title: string;
       authorName: string;
@@ -27,42 +29,30 @@ export default async function ReviewPage({ params }: Props) {
   return (
     <div className="min-h-screen bg-white font-sans">
       <div className="max-w-6xl mx-auto py-12 px-8">
-
         {/* Header */}
         <div className="mb-6 flex items-start justify-between gap-8">
           <div>
-            <a
-              href="/records/dashboard"
-              className="text-sm text-indigo-600 hover:text-indigo-500 font-medium"
-            >
-              ← Back to Vault
+            <a href="/records/dashboard" className="text-sm text-indigo-600 hover:text-indigo-500 font-medium">
+              &larr; Back to Vault
             </a>
-            <h1 className="mt-2 text-2xl font-semibold text-gray-900">
-              {script.title}
-            </h1>
+            <h1 className="mt-2 text-2xl font-semibold text-gray-900">{script.title}</h1>
             <p className="mt-1 text-sm text-gray-500 max-w-xl">
-              Review the script below for any content that could identify the
-              writer. Use the <strong>Mark Text</strong> or{" "}
-              <strong>Mark Area</strong> tools to flag it, then hit{" "}
-              <strong>Apply Redactions</strong> to burn it out permanently
-              before clearing.
+              Mark identifying text or areas, then hit <strong>Save & Clear</strong> to strip the identity.
             </p>
           </div>
 
-          {/* Writer identity — only visible here in the Records Office */}
           <div className="shrink-0 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm">
             <p className="font-semibold text-amber-800 mb-1">Writer Identity</p>
-            <p className="text-amber-700">
-              <span className="font-medium">Name:</span> {script.authorName}
-            </p>
-            <p className="text-amber-700">
-              <span className="font-medium">Contact:</span> {script.contactInfo}
-            </p>
+            <p className="text-amber-700"><span className="font-medium">Name:</span> {script.authorName}</p>
+            <p className="text-amber-700"><span className="font-medium">Contact:</span> {script.contactInfo}</p>
           </div>
         </div>
 
-        {/* EmbedPDF Redaction Viewer */}
-        <RedactionViewer scriptId={script.id} filePath={script.filePath} />
+        {/* Note: We pass the API URL, not the raw filePath */}
+        <RedactionViewer 
+          scriptId={script.id} 
+          fileUrl={`/api/scripts/${script.id}`} 
+        />
       </div>
     </div>
   );
