@@ -1,6 +1,6 @@
 'use client'
 
-import { CircleCheckBig, ClipboardClock } from 'lucide-react'
+import { CircleCheckBig, ClipboardClock, Settings, LogOut } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -53,6 +53,24 @@ const RecordsDashboardSidebar = () => {
           )
         })}
       </nav>
+
+      {/* Bottom actions */}
+      <div className="px-3 py-4 border-t border-gray-200 space-y-1">
+        <button
+          onClick={() => {}}
+          className="flex w-full items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+        >
+          <Settings className="w-4 h-4 shrink-0 text-gray-400" />
+          Settings
+        </button>
+        <button
+          onClick={() => {}}
+          className="flex w-full items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors group"
+        >
+          <LogOut className="w-4 h-4 shrink-0 text-gray-400 group-hover:text-red-500 transition-colors" />
+          Log Out
+        </button>
+      </div>
     </aside>
   )
 }
