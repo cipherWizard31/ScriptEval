@@ -5,11 +5,12 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   const script = db
     .prepare(`SELECT internalPath FROM scripts WHERE id = ?`)
-    .get(params.id) as { internalPath: string } | undefined
+    .get(id) as { internalPath: string } | undefined
 
   if (!script) {
     return new NextResponse('Script not found', { status: 404 })
