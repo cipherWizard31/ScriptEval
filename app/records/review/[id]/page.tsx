@@ -66,10 +66,10 @@ export default async function ReviewPage({ params }: Props) {
         </div>
 
         {/* --- THE PDF VIEWER --- */}
-        <div className="border rounded-xl shadow-inner bg-gray-50 overflow-hidden h-[800px]">
+        <div className="border rounded-xl shadow-inner bg-gray-50 overflow-hidden h-200">
            <RedactionViewer 
              scriptId={script.id} 
-             filePath={script.internalPath} 
+             fileUrl={script.internalPath} 
            />
         </div>
 
