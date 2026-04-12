@@ -23,8 +23,7 @@ export async function GET(
       status: 200,
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': 'inline',
-        // Prevent caching so a freshly redacted file is always served
+        'Content-Disposition': `inline; filename="${id}.pdf"`,
         'Cache-Control': 'no-store',
       },
     })

@@ -25,7 +25,12 @@ export default async function ReviewPage({ params }: Props) {
 
   if (!script) notFound();
 
-  // Build a browser-accessible URL — the API route reads the file from disk
+  // Read the file server-side and pass as base64 — avoids any client-side
+  // fetch that browser download managers (IDM etc.) would intercept
+  const { readFile } = await import('fs/promises')
+  const fileBuffer = await readFile(script.internalPath)
+  const fileBase64 = fileBuffer.toString('base64')
+
   const fileUrl = `/api/scripts/${id}/file`
 
   return (
@@ -66,7 +71,7 @@ export default async function ReviewPage({ params }: Props) {
         </div>
 
         {/* EmbedPDF Redaction Viewer */}
-        <RedactionViewer scriptId={script.id} fileUrl={fileUrl} />
+        <RedactionViewer scriptId={script.id} fileBase64={fileBase64} />
       </div>
     </div>
   );
