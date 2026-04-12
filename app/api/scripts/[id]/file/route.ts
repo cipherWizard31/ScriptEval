@@ -1,4 +1,4 @@
-// app/api/download/[id]/route.ts
+// app/api/scripts/[id]/file/route.ts
 import db from '@/lib/db'
 import { readFile } from 'fs/promises'
 import { NextRequest, NextResponse } from 'next/server'
@@ -24,7 +24,6 @@ export async function GET(
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': `inline; filename="${id}.pdf"`,
-        // Prevent caching so a freshly redacted file is always served
         'Cache-Control': 'no-store',
       },
     })
