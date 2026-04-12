@@ -1,15 +1,16 @@
-// app/api/scripts/[id]/file/route.ts
+// app/api/download/[id]/route.ts
 import db from '@/lib/db'
 import { readFile } from 'fs/promises'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   const script = db
     .prepare(`SELECT internalPath FROM scripts WHERE id = ?`)
-    .get(params.id) as { internalPath: string } | undefined
+    .get(id) as { internalPath: string } | undefined
 
   if (!script) {
     return new NextResponse('Script not found', { status: 404 })
@@ -22,7 +23,7 @@ export async function GET(
       status: 200,
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': 'inline',
+        'Content-Disposition': `inline; filename="${id}.pdf"`,
         // Prevent caching so a freshly redacted file is always served
         'Cache-Control': 'no-store',
       },

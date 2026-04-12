@@ -1,5 +1,6 @@
 // app/records/review/[id]/page.tsx
 import db from "@/lib/db";
+import { readFile } from "fs/promises";
 import { notFound } from "next/navigation";
 import PDFReviewerClient from "./PDFviewerClient";
 
@@ -12,7 +13,7 @@ export default async function ReviewPage({ params }: Props) {
 
   const script = db
     .prepare(
-      `SELECT id, title, authorName, contactInfo
+      `SELECT id, title, authorName, contactInfo, internalPath
        FROM scripts
        WHERE id = ? AND status = 'PENDING_RECORDS'`
     )
@@ -21,9 +22,20 @@ export default async function ReviewPage({ params }: Props) {
       title: string;
       authorName: string;
       contactInfo: string;
+      internalPath: string;
     } | undefined;
 
   if (!script) notFound();
+
+  // Read PDF server-side and pass as base64 — bypasses IDM entirely
+  // since the data travels as RSC JSON, not as an application/pdf HTTP response.
+  let pdfBase64: string | null = null;
+  try {
+    const buffer = await readFile(script.internalPath);
+    pdfBase64 = buffer.toString('base64');
+  } catch {
+    // pdfBase64 stays null; the client component will show an error state
+  }
 
   return (
     <div className="min-h-screen bg-white font-sans">
@@ -60,8 +72,8 @@ export default async function ReviewPage({ params }: Props) {
           </div>
         </div>
 
-        {/* PDF Reviewer */}
-        <PDFReviewerClient scriptId={script.id} />
+        {/* PDF Reviewer — pdfBase64 comes from the server, IDM cannot intercept it */}
+        <PDFReviewerClient scriptId={script.id} pdfBase64={pdfBase64} />
       </div>
     </div>
   );

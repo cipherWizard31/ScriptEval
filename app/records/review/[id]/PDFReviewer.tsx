@@ -1,7 +1,7 @@
 // app/records/review/[id]/PDFReviewer.tsx
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 import { useRouter } from 'next/navigation'
 import { clearScript } from '@/app/actions/clear-script'
@@ -14,27 +14,24 @@ pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs'
 
 interface Props {
   scriptId: string
+  pdfBase64: string | null
 }
 
-export default function PDFReviewer({ scriptId }: Props) {
+export default function PDFReviewer({ scriptId, pdfBase64 }: Props) {
   const router = useRouter()
   const [numPages, setNumPages] = useState<number>(0)
   const [currentPage, setCurrentPage] = useState(1)
   const [isSaving, setIsSaving] = useState(false)
   const [replacedFile, setReplacedFile] = useState<File | null>(null)
-  const [pdfBlob, setPdfBlob] = useState<Blob | null>(null)
-  const [fetchError, setFetchError] = useState(false)
 
-  // Fetch PDF as blob from API route — no base64 serialization issues
-  useEffect(() => {
-    fetch(`/api/scripts/${scriptId}/file`)
-      .then(res => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        return res.blob()
-      })
-      .then(blob => setPdfBlob(blob))
-      .catch(() => setFetchError(true))
-  }, [scriptId])
+  // Convert base64 → Blob once, client-side. No HTTP fetch — IDM cannot intercept this.
+  const pdfBlob = useMemo<Blob | null>(() => {
+    if (!pdfBase64) return null
+    const binary = atob(pdfBase64)
+    const bytes = new Uint8Array(binary.length)
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i)
+    return new Blob([bytes], { type: 'application/pdf' })
+  }, [pdfBase64])
 
   function handleDownload() {
     if (!pdfBlob) return
@@ -162,16 +159,9 @@ export default function PDFReviewer({ scriptId }: Props) {
 
       {/* PDF Viewer */}
       <div className="rounded-lg border border-gray-200 bg-gray-100 overflow-auto flex justify-center py-6 min-h-[75vh]">
-        {fetchError ? (
+        {!pdfBase64 ? (
           <div className="flex items-center justify-center h-[75vh]">
-            <p className="text-sm text-red-500">Failed to load PDF.</p>
-          </div>
-        ) : !pdfBlob ? (
-          <div className="flex items-center justify-center h-[75vh]">
-            <div className="text-center space-y-2">
-              <div className="mx-auto h-6 w-6 animate-spin rounded-full border-2 border-indigo-600 border-t-transparent" />
-              <p className="text-sm text-gray-400">Loading PDF…</p>
-            </div>
+            <p className="text-sm text-red-500">Failed to load PDF from server.</p>
           </div>
         ) : (
           <Document

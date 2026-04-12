@@ -37,6 +37,8 @@ export default function EvaluatorDashboard() {
                   </span>
                   <a 
                     href={`/api/download/${script.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="text-sm font-bold text-amber-700 hover:text-amber-900 px-4 py-2 bg-amber-50 rounded-lg transition-colors"
                   >
                     Read Script
