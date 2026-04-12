@@ -1,7 +1,7 @@
 // app/records/review/[id]/page.tsx
 import db from "@/lib/db";
 import { notFound } from "next/navigation";
-import RedactionViewer from "./RedactionViewer";
+import PDFReviewerClient from "./PDFviewerClient";
 
 interface Props {
   params: Promise<{ id: string }>
@@ -9,9 +9,10 @@ interface Props {
 
 export default async function ReviewPage({ params }: Props) {
   const { id } = await params
+
   const script = db
     .prepare(
-      `SELECT id, title, authorName, contactInfo, internalPath
+      `SELECT id, title, authorName, contactInfo
        FROM scripts
        WHERE id = ? AND status = 'PENDING_RECORDS'`
     )
@@ -20,18 +21,9 @@ export default async function ReviewPage({ params }: Props) {
       title: string;
       authorName: string;
       contactInfo: string;
-      internalPath: string;
     } | undefined;
 
   if (!script) notFound();
-
-  // Read the file server-side and pass as base64 — avoids any client-side
-  // fetch that browser download managers (IDM etc.) would intercept
-  const { readFile } = await import('fs/promises')
-  const fileBuffer = await readFile(script.internalPath)
-  const fileBase64 = fileBuffer.toString('base64')
-
-  const fileUrl = `/api/scripts/${id}/file`
 
   return (
     <div className="min-h-screen bg-white font-sans">
@@ -50,15 +42,13 @@ export default async function ReviewPage({ params }: Props) {
               {script.title}
             </h1>
             <p className="mt-1 text-sm text-gray-500 max-w-xl">
-              Review the script below for any content that could identify the
-              writer. Use the <strong>Mark Text</strong> or{" "}
-              <strong>Mark Area</strong> tools to flag it, then hit{" "}
-              <strong>Apply Redactions</strong> to burn it out permanently
-              before clearing.
+              Review the script for any content that could identify the writer.
+              Download it, redact externally if needed, re-upload the clean
+              version, then hit Clear &amp; Strip.
             </p>
           </div>
 
-          {/* Writer identity — only visible here in the Records Office */}
+          {/* Writer identity — only visible here in Records Office */}
           <div className="shrink-0 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm">
             <p className="font-semibold text-amber-800 mb-1">Writer Identity</p>
             <p className="text-amber-700">
@@ -70,8 +60,8 @@ export default async function ReviewPage({ params }: Props) {
           </div>
         </div>
 
-        {/* EmbedPDF Redaction Viewer */}
-        <RedactionViewer scriptId={script.id} fileBase64={fileBase64} />
+        {/* PDF Reviewer */}
+        <PDFReviewerClient scriptId={script.id} />
       </div>
     </div>
   );
