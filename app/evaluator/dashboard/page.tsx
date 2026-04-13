@@ -1,16 +1,23 @@
 // app/evaluator/dashboard/page.tsx
 import db from '@/lib/db';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 
 interface Script {
   id: string;
   title: string;
-  authorName: string;
-  uploadedAt: string;
+  createdAt: string; // Wait, previous code expected uploadedAt!
 }
 
-export default function EvaluatorDashboard() {
-  // Evaluators only need to see what's available to read
-  const scripts = db.prepare('SELECT id, title, authorName, uploadedAt FROM scripts ORDER BY uploadedAt DESC').all() as Script[];
+export default async function EvaluatorDashboard() {
+  const session = await auth.api.getSession({
+    headers: await headers()
+  });
+
+  if (!session) return null;
+
+  // Evaluators only need to see what's specifically assigned to THEM
+  const scripts = db.prepare('SELECT id, title, createdAt FROM scripts WHERE status = "ASSIGNED" AND evaluatorId = ? ORDER BY createdAt DESC').all(session.user.id) as Script[];
 
   return (
     <main className="min-h-screen bg-stone-50 p-8 font-sans">
@@ -28,12 +35,12 @@ export default function EvaluatorDashboard() {
               <div key={script.id} className="bg-white p-6 rounded-xl shadow-sm border border-stone-200 hover:shadow-md transition-shadow">
                 <div className="mb-4">
                   <h2 className="text-xl font-bold text-stone-900 line-clamp-1">{script.title}</h2>
-                  <p className="text-sm text-stone-500">by {script.authorName}</p>
+                  <p className="text-sm text-stone-500 italic">Author Identity Restricted</p>
                 </div>
                 
                 <div className="flex items-center justify-between mt-6">
                   <span className="text-xs text-stone-400">
-                    Added {new Date(script.uploadedAt).toLocaleDateString()}
+                    Cleared on {new Date(script.createdAt).toLocaleDateString()}
                   </span>
                   <a 
                     href={`/api/download/${script.id}`}
