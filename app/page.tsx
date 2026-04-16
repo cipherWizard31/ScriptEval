@@ -1,20 +1,12 @@
-import Link from "next/link";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+"use client"
 
-export default async function LandingPage() {
-  const session = await auth.api.getSession({
-    headers: await headers()
-  });
+import Link from "next/link";
+import LogOutFunction from "./actions/log-out";
+
+export default function LandingPage() {
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-white p-6 relative">
-      {session?.user && (
-        <div className="absolute top-6 right-6 bg-indigo-50 border border-indigo-100 text-indigo-700 px-4 py-2 rounded-full text-sm font-medium shadow-sm flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-green-500"></span>
-          Logged in as <span className="font-bold">{session.user.name}</span> ({session.user.email})
-        </div>
-      )}
       <h1 className="text-5xl font-black text-slate-900 mb-2">ScriptEval</h1>
       <p className="text-slate-500 mb-12 text-center max-w-sm">
         The internal gateway for secure theatrical script management.
@@ -63,6 +55,22 @@ export default async function LandingPage() {
             Secure login for Evaluators, Record Office, and Theater Class Administrators.
           </p>
         </Link>
+
+        {/* Logout / Auth Portal Card */}
+        <button
+          onClick={async () => LogOutFunction()}
+          className="group p-8 border-2 border-slate-100 rounded-2xl hover:border-red-200 hover:bg-red-50/30 transition-all col-span-1 md:col-span-2"
+        >
+          <div className="flex items-center gap-2 mb-2">
+            <h2 className="text-xl font-bold text-slate-800 group-hover:text-red-700">
+              Logout
+            </h2>
+            <span className="px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-xs font-bold">Secure</span>
+          </div>
+          <p className="text-sm text-slate-500">
+            Logout of the system.
+          </p>
+        </button>
 
         {/* Theater Class(Admin) Card */}
         <Link
