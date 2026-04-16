@@ -1,8 +1,20 @@
 import Link from "next/link";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const session = await auth.api.getSession({
+    headers: await headers()
+  });
+
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center bg-white p-6">
+    <main className="min-h-screen flex flex-col items-center justify-center bg-white p-6 relative">
+      {session?.user && (
+        <div className="absolute top-6 right-6 bg-indigo-50 border border-indigo-100 text-indigo-700 px-4 py-2 rounded-full text-sm font-medium shadow-sm flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-green-500"></span>
+          Logged in as <span className="font-bold">{session.user.name}</span> ({session.user.email})
+        </div>
+      )}
       <h1 className="text-5xl font-black text-slate-900 mb-2">ScriptEval</h1>
       <p className="text-slate-500 mb-12 text-center max-w-sm">
         The internal gateway for secure theatrical script management.
