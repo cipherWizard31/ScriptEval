@@ -1,9 +1,11 @@
 "use client"
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import LogOutFunction from "./actions/log-out";
 
 export default function LandingPage() {
+  const router = useRouter();
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-white p-6 relative">
@@ -58,8 +60,8 @@ export default function LandingPage() {
 
         {/* Logout / Auth Portal Card */}
         <button
-          onClick={async () => LogOutFunction()}
-          className="group p-8 border-2 border-slate-100 rounded-2xl hover:border-red-200 hover:bg-red-50/30 transition-all col-span-1 md:col-span-2"
+          onClick={async () => LogOutFunction(router)}
+          className="group p-8 border-2 border-slate-100 rounded-2xl hover:border-red-200 hover:bg-red-50/30 transition-all col-span-1 md:col-span-2 text-left w-full block"
         >
           <div className="flex items-center gap-2 mb-2">
             <h2 className="text-xl font-bold text-slate-800 group-hover:text-red-700">
