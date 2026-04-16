@@ -70,9 +70,10 @@ export default async function AdminDashboard() {
                         <select 
                           name="evaluatorId" 
                           required
+                          defaultValue=""
                           className="flex-1 bg-slate-50 border border-slate-200 text-sm rounded-lg px-3 py-2 text-slate-700 font-medium outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                         >
-                          <option value="" disabled selected>Select an Evaluator...</option>
+                          <option value="" disabled>Select an Evaluator...</option>
                           {evaluators.map(ev => (
                             <option key={ev.id} value={ev.id}>{ev.name} ({ev.email})</option>
                           ))}

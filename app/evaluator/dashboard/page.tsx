@@ -17,7 +17,7 @@ export default async function EvaluatorDashboard() {
   if (!session) return null;
 
   // Evaluators only need to see what's specifically assigned to THEM
-  const scripts = db.prepare('SELECT id, title, createdAt FROM scripts WHERE status = "ASSIGNED" AND evaluatorId = ? ORDER BY createdAt DESC').all(session.user.id) as Script[];
+  const scripts = db.prepare("SELECT id, title, createdAt FROM scripts WHERE status = 'ASSIGNED' AND evaluatorId = ? ORDER BY createdAt DESC").all(session.user.id) as Script[];
 
   return (
     <main className="min-h-screen bg-stone-50 p-8 font-sans">
