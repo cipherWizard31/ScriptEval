@@ -1,8 +1,14 @@
+"use client"
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import LogOutFunction from "./actions/log-out";
 
 export default function LandingPage() {
+  const router = useRouter();
+
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center bg-white p-6">
+    <main className="min-h-screen flex flex-col items-center justify-center bg-white p-6 relative">
       <h1 className="text-5xl font-black text-slate-900 mb-2">ScriptEval</h1>
       <p className="text-slate-500 mb-12 text-center max-w-sm">
         The internal gateway for secure theatrical script management.
@@ -36,6 +42,22 @@ export default function LandingPage() {
           </p>
         </Link>
 
+        {/* Login / Auth Portal Card */}
+        <Link
+          href="/login"
+          className="group p-8 border-2 border-slate-100 rounded-2xl hover:border-indigo-200 hover:bg-indigo-50/30 transition-all col-span-1 md:col-span-2"
+        >
+          <div className="flex items-center gap-2 mb-2">
+            <h2 className="text-xl font-bold text-slate-800 group-hover:text-indigo-700">
+              Authentication Portal
+            </h2>
+            <span className="px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold">Secure</span>
+          </div>
+          <p className="text-sm text-slate-500">
+            Secure login for Evaluators, Record Office, and Theater Class Administrators.
+          </p>
+        </Link>
+
         {/* Theater Class(Admin) Card */}
         <Link
           href="/admin/dashboard"
@@ -49,7 +71,7 @@ export default function LandingPage() {
             evaluators, and manages the entire system.
           </p>
         </Link>
-
+        
         {/* Evaluator Card */}
         <Link
           href="/evaluator/dashboard"
