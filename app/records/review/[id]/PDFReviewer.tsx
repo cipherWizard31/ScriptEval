@@ -24,7 +24,6 @@ export default function PDFReviewer({ scriptId, pdfBase64 }: Props) {
   const [isSaving, setIsSaving] = useState(false)
   const [replacedFile, setReplacedFile] = useState<File | null>(null)
 
-  // Convert base64 → Blob once, client-side. No HTTP fetch — IDM cannot intercept this.
   const pdfBlob = useMemo<Blob | null>(() => {
     if (!pdfBase64) return null
     const binary = atob(pdfBase64)
@@ -69,87 +68,106 @@ export default function PDFReviewer({ scriptId, pdfBase64 }: Props) {
   }
 
   return (
-    <div className="space-y-4">
+    <div style={{ display: "flex", flexDirection: "column", gap: "0.875rem" }}>
 
       {/* Toolbar */}
-      <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 px-4 py-2">
+      <div style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        background: "var(--surface)",
+        border: "1px solid var(--border)",
+        borderRadius: "var(--radius-sm)",
+        padding: "0.625rem 1rem",
+      }}>
         {/* Pagination */}
-        <div className="flex items-center gap-3">
+        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
           <button
             onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
             disabled={currentPage <= 1}
-            className="rounded px-2 py-1 text-sm text-gray-600 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            className="btn btn-ghost btn-sm"
           >
             ← Prev
           </button>
-          <span className="text-sm text-gray-600 tabular-nums">
+          <span style={{ fontSize: "0.875rem", color: "var(--text-muted)", fontVariantNumeric: "tabular-nums" }}>
             {numPages > 0 ? `${currentPage} / ${numPages}` : '—'}
           </span>
           <button
             onClick={() => setCurrentPage(p => Math.min(numPages, p + 1))}
             disabled={currentPage >= numPages}
-            className="rounded px-2 py-1 text-sm text-gray-600 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            className="btn btn-ghost btn-sm"
           >
             Next →
           </button>
         </div>
 
         {/* Right actions */}
-        <div className="flex items-center gap-3">
+        <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
           <button
             onClick={handleDownload}
             disabled={!pdfBlob}
-            className="inline-flex items-center gap-1.5 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="btn btn-ghost btn-sm"
           >
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-            </svg>
-            Download PDF
+            ↓ Download PDF
           </button>
-          <a href="/records/dashboard" className="text-sm font-semibold text-gray-500 hover:text-gray-700">
+          <a href="/records/dashboard" className="btn btn-ghost btn-sm" style={{ textDecoration: "none" }}>
             Cancel
           </a>
           <button
             onClick={handleClear}
             disabled={isSaving}
-            className="rounded-md bg-indigo-600 px-4 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="btn btn-primary btn-sm"
           >
             {isSaving ? 'Clearing…' : replacedFile ? 'Upload & Clear' : 'Clear & Strip'}
           </button>
         </div>
       </div>
 
-      {/* Re-upload section */}
-      <div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 px-6 py-4">
-        <div className="flex items-center justify-between">
+      {/* Re-upload zone */}
+      <div style={{
+        background: "var(--surface)",
+        border: "1.5px dashed var(--border)",
+        borderRadius: "var(--radius-sm)",
+        padding: "1rem 1.25rem",
+      }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div>
-            <p className="text-sm font-medium text-gray-700">
+            <p style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--text)", marginBottom: "0.2rem" }}>
               Spotted identifying info in the script?
             </p>
-            <p className="text-xs text-gray-500 mt-0.5">
-              Redact it externally in any PDF editor, then upload the cleaned version before clearing.
+            <p style={{ fontSize: "0.75rem", color: "var(--text-faint)" }}>
+              Redact externally in any PDF editor, then upload the cleaned version before clearing.
             </p>
           </div>
-          <label className="cursor-pointer">
+          <label style={{ cursor: "pointer" }}>
             <input
               type="file"
               accept=".pdf"
-              className="sr-only"
+              style={{ display: "none" }}
               onChange={e => setReplacedFile(e.target.files?.[0] ?? null)}
             />
-            <span className="inline-flex items-center gap-1.5 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+            <span className="btn btn-ghost btn-sm">
               {replacedFile ? `✓ ${replacedFile.name}` : 'Upload cleaned PDF'}
             </span>
           </label>
         </div>
         {replacedFile && (
-          <div className="mt-3 flex items-center justify-between rounded-md bg-green-50 border border-green-200 px-3 py-2">
-            <p className="text-xs text-green-700 font-medium">
+          <div style={{
+            marginTop: "0.75rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            background: "var(--success-bg)",
+            border: "1px solid var(--success-border)",
+            borderRadius: "var(--radius-sm)",
+            padding: "0.5rem 0.875rem",
+          }}>
+            <p style={{ fontSize: "0.75rem", color: "var(--success)", fontWeight: 500 }}>
               Replacement ready — this file will overwrite the original when you click Upload &amp; Clear.
             </p>
             <button
               onClick={() => setReplacedFile(null)}
-              className="text-xs text-green-600 hover:text-green-800 font-medium"
+              style={{ background: "none", border: "none", cursor: "pointer", fontSize: "0.75rem", color: "var(--success)", fontWeight: 600, marginLeft: "1rem" }}
             >
               Remove
             </button>
@@ -158,26 +176,42 @@ export default function PDFReviewer({ scriptId, pdfBase64 }: Props) {
       </div>
 
       {/* PDF Viewer */}
-      <div className="rounded-lg border border-gray-200 bg-gray-100 overflow-auto flex justify-center py-6 min-h-[75vh]">
+      <div style={{
+        background: "var(--surface)",
+        border: "1px solid var(--border)",
+        borderRadius: "var(--radius-card)",
+        overflow: "auto",
+        display: "flex",
+        justifyContent: "center",
+        padding: "2rem",
+        minHeight: "75vh",
+      }}>
         {!pdfBase64 ? (
-          <div className="flex items-center justify-center h-[75vh]">
-            <p className="text-sm text-red-500">Failed to load PDF from server.</p>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "75vh" }}>
+            <p style={{ fontSize: "0.875rem", color: "var(--danger)" }}>Failed to load PDF from server.</p>
           </div>
         ) : (
           <Document
             file={pdfBlob}
             onLoadSuccess={({ numPages }) => setNumPages(numPages)}
             loading={
-              <div className="flex items-center justify-center h-[75vh]">
-                <div className="text-center space-y-2">
-                  <div className="mx-auto h-6 w-6 animate-spin rounded-full border-2 border-indigo-600 border-t-transparent" />
-                  <p className="text-sm text-gray-400">Rendering…</p>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "75vh" }}>
+                <div style={{ textAlign: "center" }}>
+                  <div style={{
+                    width: 24, height: 24,
+                    border: "2px solid var(--indigo)",
+                    borderTopColor: "transparent",
+                    borderRadius: "50%",
+                    animation: "pdf-spin 0.8s linear infinite",
+                    margin: "0 auto 0.5rem",
+                  }} />
+                  <p style={{ fontSize: "0.875rem", color: "var(--text-faint)" }}>Rendering…</p>
                 </div>
               </div>
             }
             error={
-              <div className="flex items-center justify-center h-[75vh]">
-                <p className="text-sm text-red-500">Failed to render PDF.</p>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "75vh" }}>
+                <p style={{ fontSize: "0.875rem", color: "var(--danger)" }}>Failed to render PDF.</p>
               </div>
             }
           >
@@ -190,6 +224,7 @@ export default function PDFReviewer({ scriptId, pdfBase64 }: Props) {
           </Document>
         )}
       </div>
+      <style>{`@keyframes pdf-spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   )
 }

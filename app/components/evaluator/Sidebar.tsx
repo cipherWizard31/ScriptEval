@@ -1,16 +1,15 @@
 'use client'
 
-import { LayoutDashboard, Users, LogOut } from 'lucide-react'
+import { FileText, LogOut } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { authClient } from '@/lib/auth-client'
 
 const navItems = [
-  { href: '/admin/dashboard', label: 'Script Assignments', icon: LayoutDashboard },
-  { href: '/admin/users',     label: 'User Management',   icon: Users },
+  { href: '/evaluator/dashboard', label: 'My Scripts', icon: FileText },
 ]
 
-const AdminDashboardSidebar = () => {
+const EvaluatorSidebar = () => {
   const pathname = usePathname()
   const router   = useRouter()
 
@@ -24,7 +23,7 @@ const AdminDashboardSidebar = () => {
     <aside className="sidebar">
       <div className="sidebar-header">
         <Link href="/" className="sidebar-brand">ScriptEval</Link>
-        <span className="sidebar-section-label">Admin</span>
+        <span className="sidebar-section-label">Evaluator</span>
       </div>
 
       <nav className="sidebar-nav">
@@ -50,4 +49,4 @@ const AdminDashboardSidebar = () => {
   )
 }
 
-export default AdminDashboardSidebar
+export default EvaluatorSidebar

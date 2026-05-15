@@ -2,60 +2,88 @@
 import db from '@/lib/db';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
+import EvaluatorSidebar from '@/app/components/evaluator/Sidebar';
 
 interface Script {
   id: string;
   title: string;
-  createdAt: string; // Wait, previous code expected uploadedAt!
+  createdAt: string;
 }
 
 export default async function EvaluatorDashboard() {
-  const session = await auth.api.getSession({
-    headers: await headers()
-  });
+  const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session) return null;
 
-  // Evaluators only need to see what's specifically assigned to THEM
-  const scripts = db.prepare("SELECT id, title, createdAt FROM scripts WHERE status = 'ASSIGNED' AND evaluatorId = ? ORDER BY createdAt DESC").all(session.user.id) as Script[];
+  const scripts = db
+    .prepare("SELECT id, title, createdAt FROM scripts WHERE status = 'ASSIGNED' AND evaluatorId = ? ORDER BY createdAt DESC")
+    .all(session.user.id) as Script[];
 
   return (
-    <main className="min-h-screen bg-stone-50 p-8 font-sans">
-      <div className="max-w-5xl mx-auto">
-        <header className="mb-10 border-b border-stone-200 pb-6">
-          <h1 className="text-2xl font-serif font-bold text-stone-800">Evaluator Portal</h1>
-          <p className="text-stone-500">Select a script from the vault to begin your review.</p>
-        </header>
+    <div className="app-shell">
+      <EvaluatorSidebar />
+      <div className="page-content">
+        <div className="page-inner">
+          <div className="page-header">
+            <h1>My Assigned Scripts</h1>
+            <p>Select a script from the vault to begin your anonymous review.</p>
+          </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {scripts.length === 0 ? (
-            <p className="text-stone-400 italic">No scripts currently assigned for evaluation.</p>
+            <div className="empty-state">
+              <p>No scripts are currently assigned to you for evaluation.</p>
+            </div>
           ) : (
-            scripts.map((script) => (
-              <div key={script.id} className="bg-white p-6 rounded-xl shadow-sm border border-stone-200 hover:shadow-md transition-shadow">
-                <div className="mb-4">
-                  <h2 className="text-xl font-bold text-stone-900 line-clamp-1">{script.title}</h2>
-                  <p className="text-sm text-stone-500 italic">Author Identity Restricted</p>
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+              gap: "1rem",
+            }}>
+              {scripts.map((script) => (
+                <div key={script.id} className="card" style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  gap: "1.25rem",
+                  transition: "background 0.2s, transform 0.2s",
+                }}>
+                  <div>
+                    <h2 style={{
+                      fontSize: "1rem",
+                      fontWeight: 700,
+                      color: "var(--text)",
+                      marginBottom: "0.375rem",
+                      overflow: "hidden",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                    }}>
+                      {script.title}
+                    </h2>
+                    <p style={{ fontSize: "0.8rem", color: "var(--text-faint)", fontStyle: "italic" }}>
+                      Author Identity Restricted
+                    </p>
+                  </div>
+
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <span style={{ fontSize: "0.75rem", color: "var(--text-faint)" }}>
+                      Cleared {new Date(script.createdAt).toLocaleDateString()}
+                    </span>
+                    <a
+                      href={`/api/download/${script.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-primary btn-sm"
+                    >
+                      Read Script
+                    </a>
+                  </div>
                 </div>
-                
-                <div className="flex items-center justify-between mt-6">
-                  <span className="text-xs text-stone-400">
-                    Cleared on {new Date(script.createdAt).toLocaleDateString()}
-                  </span>
-                  <a 
-                    href={`/api/download/${script.id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm font-bold text-amber-700 hover:text-amber-900 px-4 py-2 bg-amber-50 rounded-lg transition-colors"
-                  >
-                    Read Script
-                  </a>
-                </div>
-              </div>
-            ))
+              ))}
+            </div>
           )}
         </div>
       </div>
-    </main>
+    </div>
   );
 }

@@ -8,9 +8,36 @@ export default function UserBadge() {
   if (!session?.user) return null;
 
   return (
-    <div className="fixed top-6 right-6 z-50 bg-indigo-50 border border-indigo-100 text-indigo-700 px-4 py-2 rounded-full text-sm font-medium shadow-sm flex items-center gap-2">
-      <span className="w-2 h-2 rounded-full bg-green-500"></span>
-      Logged in as <span className="font-bold">{session.user.name}</span> ({session.user.email})
+    <div style={{
+      position: "fixed",
+      top: "1.25rem",
+      right: "1.25rem",
+      zIndex: 50,
+      display: "flex",
+      alignItems: "center",
+      gap: "0.5rem",
+      background: "var(--surface)",
+      border: "1px solid var(--border)",
+      borderRadius: "999px",
+      padding: "0.375rem 0.875rem",
+      backdropFilter: "blur(12px)",
+      fontSize: "0.8125rem",
+      color: "var(--text-muted)",
+      boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+    }}>
+      <span style={{
+        width: 7, height: 7,
+        borderRadius: "50%",
+        background: "var(--success)",
+        display: "inline-block",
+        boxShadow: "0 0 6px var(--success)",
+      }} />
+      <span>
+        Logged in as{" "}
+        <strong style={{ color: "var(--text)", fontWeight: 600 }}>
+          {session.user.name}
+        </strong>
+      </span>
     </div>
   );
 }
