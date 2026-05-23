@@ -1,6 +1,6 @@
 'use client'
 
-import { LayoutDashboard, Users, LogOut } from 'lucide-react'
+import { LayoutDashboard, Users, Trophy, LogOut } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { authClient } from '@/lib/auth-client'
@@ -8,6 +8,7 @@ import { authClient } from '@/lib/auth-client'
 const navItems = [
   { href: '/admin/dashboard', label: 'Script Assignments', icon: LayoutDashboard },
   { href: '/admin/users',     label: 'User Management',   icon: Users },
+  { href: '/admin/results',   label: 'Results',           icon: Trophy },
 ]
 
 const AdminDashboardSidebar = () => {

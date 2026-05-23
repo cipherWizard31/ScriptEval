@@ -15,6 +15,10 @@ db.exec(`
     contactInfo TEXT,
     internalPath TEXT,
     status TEXT DEFAULT 'PENDING_RECORDS',
+    evaluatorId TEXT,
+    evaluationScore INTEGER,
+    evaluationNotes TEXT,
+    evaluatedAt DATETIME,
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
   )
 `);
@@ -34,6 +38,18 @@ if (!colNames.includes('phone')) {
 }
 if (!colNames.includes('email')) {
   db.exec(`ALTER TABLE scripts ADD COLUMN email TEXT`);
+}
+if (!colNames.includes('evaluatorId')) {
+  db.exec(`ALTER TABLE scripts ADD COLUMN evaluatorId TEXT`);
+}
+if (!colNames.includes('evaluationScore')) {
+  db.exec(`ALTER TABLE scripts ADD COLUMN evaluationScore INTEGER`);
+}
+if (!colNames.includes('evaluationNotes')) {
+  db.exec(`ALTER TABLE scripts ADD COLUMN evaluationNotes TEXT`);
+}
+if (!colNames.includes('evaluatedAt')) {
+  db.exec(`ALTER TABLE scripts ADD COLUMN evaluatedAt DATETIME`);
 }
 
 export default db;
