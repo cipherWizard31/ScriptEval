@@ -51,5 +51,8 @@ if (!colNames.includes('evaluationNotes')) {
 if (!colNames.includes('evaluatedAt')) {
   db.exec(`ALTER TABLE scripts ADD COLUMN evaluatedAt DATETIME`);
 }
+if (!colNames.includes('deletedAt')) {
+  db.exec(`ALTER TABLE scripts ADD COLUMN deletedAt DATETIME`);
+}
 
 export default db;
