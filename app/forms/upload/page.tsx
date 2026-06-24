@@ -9,10 +9,10 @@ import { useRouter } from 'next/navigation';
 const STEPS = ['Writer Information', 'Script Profile'];
 
 export default function PublicUpload() {
-  const [step, setStep]               = useState(0);
-  const [direction, setDirection]     = useState<'forward' | 'back'>('forward');
-  const [animating, setAnimating]     = useState(false);
-  const [loading, setLoading]         = useState(false);
+  const [step, setStep] = useState(0);
+  const [direction, setDirection] = useState<'forward' | 'back'>('forward');
+  const [animating, setAnimating] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
@@ -37,17 +37,17 @@ export default function PublicUpload() {
   }
 
   function validateStep0() {
-    if (!fields.author.trim())   { toast.error('Full name is required.');    return false; }
-    if (!fields.address.trim())  { toast.error('Address is required.');      return false; }
-    if (!fields.phone.trim())    { toast.error('Phone number is required.'); return false; }
-    if (!fields.email.trim())    { toast.error('Email address is required.'); return false; }
+    if (!fields.author.trim()) { toast.error('Full name is required.'); return false; }
+    if (!fields.address.trim()) { toast.error('Address is required.'); return false; }
+    if (!fields.phone.trim()) { toast.error('Phone number is required.'); return false; }
+    if (!fields.email.trim()) { toast.error('Email address is required.'); return false; }
     return true;
   }
 
   function validateStep1() {
-    if (!fields.title.trim())       { toast.error('Script name is required.');  return false; }
-    if (!fields.description.trim()) { toast.error('Description is required.');   return false; }
-    if (!selectedFile)              { toast.error('Please attach a PDF file.'); return false; }
+    if (!fields.title.trim()) { toast.error('Script name is required.'); return false; }
+    if (!fields.description.trim()) { toast.error('Description is required.'); return false; }
+    if (!selectedFile) { toast.error('Please attach a PDF file.'); return false; }
     return true;
   }
 
@@ -60,13 +60,13 @@ export default function PublicUpload() {
 
     try {
       const fd = new FormData();
-      fd.append('author',      fields.author);
-      fd.append('address',     fields.address);
-      fd.append('phone',       fields.phone);
-      fd.append('email',       fields.email);
-      fd.append('title',       fields.title);
+      fd.append('author', fields.author);
+      fd.append('address', fields.address);
+      fd.append('phone', fields.phone);
+      fd.append('email', fields.email);
+      fd.append('title', fields.title);
       fd.append('description', fields.description);
-      fd.append('scriptFile',  selectedFile!);
+      fd.append('scriptFile', selectedFile!);
 
       const res = await uploadScript(fd);
       if (res.success) {
@@ -105,7 +105,7 @@ export default function PublicUpload() {
                 <span className="dot">
                   {i < step ? (
                     <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
-                      <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   ) : i + 1}
                 </span>
@@ -129,7 +129,7 @@ export default function PublicUpload() {
                   <label htmlFor="author">Full Name *</label>
                   <input
                     id="author" name="author" type="text"
-                    placeholder="e.g., Maria Santos"
+                    placeholder="e.g., Abebe Bayisa"
                     autoComplete="name"
                     value={fields.author} onChange={handleChange}
                   />
@@ -139,7 +139,7 @@ export default function PublicUpload() {
                   <label htmlFor="address">Address *</label>
                   <input
                     id="address" name="address" type="text"
-                    placeholder="e.g., 123 Rizal St., Manila"
+                    placeholder="e.g., Wollega University, Nekemte"
                     autoComplete="street-address"
                     value={fields.address} onChange={handleChange}
                   />
@@ -150,7 +150,7 @@ export default function PublicUpload() {
                     <label htmlFor="phone">Phone Number *</label>
                     <input
                       id="phone" name="phone" type="tel"
-                      placeholder="+63 9XX XXX XXXX"
+                      placeholder="+251 9XXXXXXXX"
                       autoComplete="tel"
                       value={fields.phone} onChange={handleChange}
                     />
@@ -179,7 +179,7 @@ export default function PublicUpload() {
                   <label htmlFor="title">Script Name *</label>
                   <input
                     id="title" name="title" type="text"
-                    placeholder="e.g., The Midnight Sonata"
+                    placeholder="e.g., Fikir Yarada"
                     value={fields.title} onChange={handleChange}
                   />
                 </div>

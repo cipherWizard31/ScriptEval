@@ -1,6 +1,6 @@
 'use client'
 
-import { CircleCheckBig, ClipboardClock, LogOut } from 'lucide-react'
+import { CircleCheckBig, ClipboardClock, LogOut, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { authClient } from '@/lib/auth-client'
@@ -8,6 +8,7 @@ import { authClient } from '@/lib/auth-client'
 const navItems = [
   { href: '/records/dashboard', label: 'Pending Scripts', icon: ClipboardClock },
   { href: '/records/cleared',   label: 'Cleared Scripts', icon: CircleCheckBig },
+  { href: '/records/deleted',   label: 'Deleted',         icon: Trash2 },
 ]
 
 const RecordsDashboardSidebar = () => {

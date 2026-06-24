@@ -45,7 +45,6 @@ export default async function EvaluatorDashboard() {
                   flexDirection: "column",
                   justifyContent: "space-between",
                   gap: "1.25rem",
-                  transition: "background 0.2s, transform 0.2s",
                 }}>
                   <div>
                     <h2 style={{
@@ -65,18 +64,28 @@ export default async function EvaluatorDashboard() {
                     </p>
                   </div>
 
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                     <span style={{ fontSize: "0.75rem", color: "var(--text-faint)" }}>
                       Cleared {new Date(script.createdAt).toLocaleDateString()}
                     </span>
-                    <a
-                      href={`/api/download/${script.id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn btn-primary btn-sm"
-                    >
-                      Read Script
-                    </a>
+                    <div style={{ display: "flex", gap: "0.5rem" }}>
+                      <a
+                        href={`/api/download/${script.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn btn-ghost btn-sm"
+                        style={{ flex: 1, textAlign: "center", textDecoration: "none" }}
+                      >
+                        ↓ Read
+                      </a>
+                      <a
+                        href={`/evaluator/evaluate/${script.id}`}
+                        className="btn btn-primary btn-sm"
+                        style={{ flex: 2, textAlign: "center", textDecoration: "none" }}
+                      >
+                        Evaluate →
+                      </a>
+                    </div>
                   </div>
                 </div>
               ))}

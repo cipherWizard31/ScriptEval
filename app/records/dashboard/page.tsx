@@ -1,6 +1,7 @@
 // app/records/dashboard/page.tsx
 import RecordsDashboardSidebar from "@/app/components/records/Sidebar";
 import db from "@/lib/db";
+import PendingTable from "@/app/components/records/PendingTable";
 
 export default async function RecordsDashboard() {
   const scripts = db
@@ -20,50 +21,7 @@ export default async function RecordsDashboard() {
             </p>
           </div>
 
-          <div className="table-wrap">
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Play Title</th>
-                  <th>Writer Name</th>
-                  <th>Contact Info</th>
-                  <th>Status</th>
-                  <th style={{ textAlign: "right" }}>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {scripts.length === 0 ? (
-                  <tr>
-                    <td colSpan={5} style={{ textAlign: "center", padding: "3rem", fontStyle: "italic", color: "var(--text-faint)" }}>
-                      No pending submissions in the vault.
-                    </td>
-                  </tr>
-                ) : (
-                  scripts.map((script) => (
-                    <tr key={script.id}>
-                      <td className="td-primary">{script.title}</td>
-                      <td>{script.authorName}</td>
-                      <td>{script.contactInfo}</td>
-                      <td>
-                        <span className="badge badge-warning">
-                          <span className="dot" />
-                          Needs Clearance
-                        </span>
-                      </td>
-                      <td style={{ textAlign: "right" }}>
-                        <a
-                          href={`/records/review/${script.id}`}
-                          className="btn btn-primary btn-sm"
-                        >
-                          Review PDF
-                        </a>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+          <PendingTable scripts={scripts} />
         </div>
       </div>
     </div>
